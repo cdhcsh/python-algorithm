@@ -3,13 +3,14 @@ import sys
 def solve(N:int,L:int,R:int,cities:list[list[int]])->int:
     d = [[0,1],[0,-1],[1,0],[-1,0]]
     q = []
+    lock = [[False] * N for _ in range(N)]
     answer = 0
     while 1:
         change = True
         visit = [(int,int)]
         for i in range(N):
             for j in range(N):
-                if (i,j) not in visit:
+                if (i,j) not in visit and not lock[i][j]:
                     sum = 0
                     group = [(i,j)]
                     sum += cities[i][j]
@@ -17,6 +18,7 @@ def solve(N:int,L:int,R:int,cities:list[list[int]])->int:
                     visit.append((i,j))
                     while q:
                         x,y = q.pop(0)
+                        lock[x][y] = True
                         for tx,ty in d:
                             nx,ny = x+tx,y+ty
                             if (not (0 <= nx < N and 0 <= ny < N)
@@ -31,10 +33,11 @@ def solve(N:int,L:int,R:int,cities:list[list[int]])->int:
                             sum += cities[nx][ny]
                             visit.append((nx,ny))
                             q.append((nx,ny))
-                    sum //=len(group)
-                    for x,y in group:
-                        cities[x][y] = sum
                     if len(group) > 1:
+                        sum //= len(group)
+                        for x, y in group:
+                            cities[x][y] = sum
+                            lock[x][y] = False
                         change = False
 
         if change:
