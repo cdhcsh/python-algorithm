@@ -8,7 +8,6 @@ def solve(n:int,m:int,start:(int,int),sd:int,data:list[list:int])->int:
         if data[x][y] == 0:
             data[x][y] = -1
             answer += 1
-        out = False
         for _ in range(4):
             sd = (sd + 3) % 4
             tx,ty = x+d[sd][0],y+d[sd][1]
